@@ -1,0 +1,13 @@
+### Create recommendation
+POST http://localhost:8080/api/v1/recommendations
+Content-Type: application/json
+
+{
+  "userId": "u1",
+  "area": "홍대",
+  "date": "2025-12-13",
+  "startTime": "14:00:00",
+  "budgetRange": "MID",
+  "transportation": "WALK",
+  "mood": ["cafe", "food"]
+}
