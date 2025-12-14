@@ -1,10 +1,12 @@
-package com.dateguide.recommendation.dto;
+package com.dateguide.recommendation.dto.client;
+
+import com.dateguide.recommendation.dto.PlaceDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public record RecommendResponse(
+public record RecommendClientResponse(
         String recommendationId,
         String userId,
         String area,

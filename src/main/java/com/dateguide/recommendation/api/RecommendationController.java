@@ -1,8 +1,8 @@
 package com.dateguide.recommendation.api;
 
 import com.dateguide.recommendation.application.RecommendService;
-import com.dateguide.recommendation.dto.RecommendRequest;
-import com.dateguide.recommendation.dto.RecommendResponse;
+import com.dateguide.recommendation.dto.client.RecommendClientRequest;
+import com.dateguide.recommendation.dto.client.RecommendClientResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +16,7 @@ public class RecommendationController {
     }
 
     @PostMapping
-    public RecommendResponse createRecommendation(@RequestBody RecommendRequest recommendRequest) {
-        return recommendService.recommend(recommendRequest);
+    public RecommendClientResponse createRecommendation(@RequestBody RecommendClientRequest recommendClientRequest) {
+        return recommendService.recommend(recommendClientRequest);
     }
 }
