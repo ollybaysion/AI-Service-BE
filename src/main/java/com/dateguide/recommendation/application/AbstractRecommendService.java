@@ -7,19 +7,11 @@ public abstract class AbstractRecommendService implements RecommendService {
 
     @Override
     public RecommendClientResponse recommend(RecommendClientRequest request) {
-        return new RecommendClientResponse(
-                "",
-                "",
-                "",
-                null,
-                null,
-                null,
-                null
-        );
+        return new RecommendClientResponse("dummy");
     }
 
     @Override
-    public String recommendAsync(RecommendClientRequest request) {
-        return "";
+    public RecommendClientResponse recommendAsync(RecommendClientRequest request) {
+        return new RecommendClientResponse("dummy");
     }
 }

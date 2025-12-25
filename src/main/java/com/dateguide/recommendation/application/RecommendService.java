@@ -12,5 +12,5 @@ public interface RecommendService {
     /**
      * jobId 를 반환한다.
      */
-    String recommendAsync(RecommendClientRequest request);
+    RecommendClientResponse recommendAsync(RecommendClientRequest request);
 }

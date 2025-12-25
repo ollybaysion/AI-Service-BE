@@ -2,6 +2,7 @@ package com.dateguide.recommendation.application;
 
 import com.dateguide.llm.port.LlmRequestPublisher;
 import com.dateguide.recommendation.dto.client.RecommendClientRequest;
+import com.dateguide.recommendation.dto.client.RecommendClientResponse;
 import com.dateguide.recommendation.dto.llm.RecommendLlmRequest;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,11 @@ public class RecommendServiceLlm extends AbstractRecommendService {
     }
 
     @Override
-    public String recommendAsync(RecommendClientRequest request) {
+    public RecommendClientResponse recommendAsync(RecommendClientRequest request) {
         if (request == null) throw new IllegalArgumentException("request is null");
 
         String jobId = UUID.randomUUID().toString();
         llmRequestPublisher.publish(RecommendLlmRequest.from(request, jobId));
-        return jobId;
+        return new RecommendClientResponse(jobId);
     }
 }
