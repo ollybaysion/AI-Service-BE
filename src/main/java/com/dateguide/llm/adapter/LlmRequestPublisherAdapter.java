@@ -13,6 +13,7 @@ import java.util.UUID;
 
 /**
  * LlmRequest 를 GMessage 로 감싸서 MessagePublisher 를 통해 publish.
+ * Kafka Topic 을 지정
  */
 @Component
 public class LlmRequestPublisherAdapter implements LlmRequestPublisher {
