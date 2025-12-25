@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service
-public class RecommendServiceImpl implements RecommendService {
+@Service("dummyRecommendService")
+public class RecommendServiceDummy extends AbstractRecommendService {
 
     @Override
     public RecommendClientResponse recommend(RecommendClientRequest request) {
