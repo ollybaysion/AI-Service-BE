@@ -1,8 +1,8 @@
 package com.dateguide.recommendation.application;
 
-import com.dateguide.recommendation.dto.RecommendRequest;
-import com.dateguide.recommendation.dto.RecommendResponse;
+import com.dateguide.recommendation.dto.client.RecommendClientRequest;
+import com.dateguide.recommendation.dto.client.RecommendClientResponse;
 
 public interface RecommendService {
-    RecommendResponse recommend(RecommendRequest recommendRequest);
+    RecommendClientResponse recommend(RecommendClientRequest recommendClientRequest);
 }

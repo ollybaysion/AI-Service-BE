@@ -1,8 +1,8 @@
 package com.dateguide.recommendation.application;
 
 import com.dateguide.recommendation.dto.PlaceDto;
-import com.dateguide.recommendation.dto.RecommendRequest;
-import com.dateguide.recommendation.dto.RecommendResponse;
+import com.dateguide.recommendation.dto.client.RecommendClientRequest;
+import com.dateguide.recommendation.dto.client.RecommendClientResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,21 +11,21 @@ import java.util.*;
 public class RecommendServiceImpl implements RecommendService {
 
     @Override
-    public RecommendResponse recommend(RecommendRequest recommendRequest) {
-        List<PlaceDto> placeList = buildSimpleRoute(recommendRequest);
+    public RecommendClientResponse recommend(RecommendClientRequest request) {
+        List<PlaceDto> placeList = buildSimpleRoute(request);
 
         String concept = String.join(" , ",
                 placeList.stream().map(PlaceDto::category).toList());
 
-        return new RecommendResponse(
+        return new RecommendClientResponse(
                 UUID.randomUUID().toString(),
-                recommendRequest.userId(),
-                recommendRequest.area(),
-                recommendRequest.date(),
-                recommendRequest.startTime(),
-                new RecommendResponse.Summary(
+                request.userId(),
+                request.area(),
+                request.date(),
+                request.startTime(),
+                new RecommendClientResponse.Summary(
                         placeList.size(),
-                        routeHint(recommendRequest),
+                        routeHint(request),
                         concept
                 ),
                 placeList
@@ -33,7 +33,7 @@ public class RecommendServiceImpl implements RecommendService {
 
     }
 
-    private List<PlaceDto> buildSimpleRoute(RecommendRequest recommendRequest) {
+    private List<PlaceDto> buildSimpleRoute(RecommendClientRequest request) {
         List<String> categories = List.of("cafe", "exhibition", "food");
 
         List<PlaceDto> result = new ArrayList<>();
@@ -43,11 +43,11 @@ public class RecommendServiceImpl implements RecommendService {
             if (result.size() >= 4) break;
             result.add(new PlaceDto(
                     order++,
-                    sampleName(recommendRequest.area(), category),
+                    sampleName(request.area(), category),
                     category,
-                    sampleAddress(recommendRequest.area()),
+                    sampleAddress(request.area()),
                     "요청 조건 기반으로 동선/무드에 맞춘 후보",
-                    estimateCost(recommendRequest.budgetRange())
+                    estimateCost(request.budgetRange())
             ));
 
         }
@@ -55,15 +55,15 @@ public class RecommendServiceImpl implements RecommendService {
         return result;
     }
 
-    private String routeHint(RecommendRequest recommendRequest) {
-        return switch (recommendRequest.transportation()) {
+    private String routeHint(RecommendClientRequest RecommendClientRequest) {
+        return switch (RecommendClientRequest.transportation()) {
             case WALK -> "도보 동선 위주";
             case PUBLIC -> "대중교통 환승 최소";
             case CAR -> "주차 고려";
         };
     }
 
-    private Integer estimateCost(RecommendRequest.BudgetRange budgetRange) {
+    private Integer estimateCost(RecommendClientRequest.BudgetRange budgetRange) {
         return switch (budgetRange) {
             case LOW -> 15000;
             case MID -> 30000;
