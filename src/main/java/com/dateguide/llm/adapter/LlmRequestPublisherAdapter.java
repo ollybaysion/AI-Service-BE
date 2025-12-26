@@ -42,5 +42,8 @@ public class LlmRequestPublisherAdapter implements LlmRequestPublisher {
                 Map.of(),
                 request
         );
+
+        messagePublisher.publish(message);
+        System.out.println("Published Message: " + message);
     }
 }
