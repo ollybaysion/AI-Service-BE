@@ -1,5 +1,9 @@
-package com.dateguide.recommendation.application;
+package com.dateguide.recommendation.application.service;
 
+import com.dateguide.llm.dto.LlmResponse;
+import com.dateguide.recommendation.dto.client.RecommendClientResponse;
+import com.dateguide.recommendation.dto.llm.RecommendLlmResponse;
+import com.dateguide.recommendation.port.in.LlmResponseUseCase;
 import com.dateguide.stream.message.StreamEventType;
 import com.dateguide.stream.sse.SseEmitterRegistry;
 import com.dateguide.stream.sse.SseMessagePublisher;
@@ -11,7 +15,7 @@ import java.time.Duration;
 import java.util.Map;
 
 @Service
-public class SseStreamService {
+public class SseStreamService implements LlmResponseUseCase {
 
     private final SseEmitterRegistry registry;
     private final SseMessagePublisher publisher;
@@ -37,5 +41,15 @@ public class SseStreamService {
         );
 
         return emitter;
+    }
+
+    @Override
+    public void onResponse(LlmResponse response) {
+        if (response == null || response.jobId() == null || response.jobId().isBlank()) {
+            return;
+        }
+
+        RecommendClientResponse clientResponse = RecommendClientResponse.from((RecommendLlmResponse) response);
+        publisher.publish(response.jobId(), StreamEventType.DONE, clientResponse);
     }
 }
