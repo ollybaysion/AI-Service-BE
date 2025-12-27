@@ -7,7 +7,7 @@ import tools.jackson.databind.ObjectMapper;
 
 public abstract class AbstractKafkaMessageHandler implements MessageHandler<String, String> {
 
-    private final ObjectMapper mapper;
+    protected final ObjectMapper mapper;
 
     protected AbstractKafkaMessageHandler(ObjectMapper mapper) {
         this.mapper = mapper;

@@ -5,6 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "kafka.llm-response")
 public record LlmResponseKafkaProperties(
-        KafkaConsumerProperties consumerProperties
+        KafkaConsumerProperties consumer
 ) {
 }

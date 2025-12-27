@@ -20,7 +20,7 @@ public class LlmResponseKafkaConfig {
 
     @Bean
     public KafkaConsumer<String, String> llmResponseKafkaConsumer(LlmResponseKafkaProperties props) {
-        KafkaConsumerProperties c = props.consumerProperties();
+        KafkaConsumerProperties c = props.consumer();
         
         Properties p = new Properties();
         p.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, c.bootstrapServers());
@@ -45,7 +45,7 @@ public class LlmResponseKafkaConfig {
             LlmResponseKafkaProperties props,
             MessageHandler<String, String> handler // TODO - Qualifer 추가
     ) {
-        KafkaConsumerProperties c = props.consumerProperties();
+        KafkaConsumerProperties c = props.consumer();
 
         Duration pollTimeout = (c.pollTimeout() == null) ? Duration.ofMillis(500) : c.pollTimeout();
         KafkaPoller.CommitMode commitMode = (c.commitMode() == null) ? KafkaPoller.CommitMode.AUTO : c.commitMode();
