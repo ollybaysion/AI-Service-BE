@@ -1,4 +1,4 @@
-package com.dateguide.llm.port;
+package com.dateguide.llm.port.out;
 
 import com.dateguide.llm.dto.LlmRequest;
 

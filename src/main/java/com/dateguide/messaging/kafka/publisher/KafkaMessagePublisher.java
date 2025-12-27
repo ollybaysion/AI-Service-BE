@@ -1,7 +1,7 @@
-package com.dateguide.messaging.kafka;
+package com.dateguide.messaging.kafka.publisher;
 
 import com.dateguide.messaging.message.GMessage;
-import com.dateguide.messaging.port.MessagePublisher;
+import com.dateguide.messaging.port.out.MessagePublisher;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;

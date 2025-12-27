@@ -1,6 +1,6 @@
 package com.dateguide.recommendation.api;
 
-import com.dateguide.recommendation.application.RecommendService;
+import com.dateguide.recommendation.port.in.ClientRecommendUseCase;
 import com.dateguide.recommendation.dto.client.RecommendClientRequest;
 import com.dateguide.recommendation.dto.client.RecommendClientResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/recommendations")
 public class RecommendationController {
 
-    private final RecommendService recommendService;
+    private final ClientRecommendUseCase clientRecommendUseCase;
 
     public RecommendationController(
-            @Qualifier("llmRecommendService") RecommendService recommendService
+            @Qualifier("llmRecommendService") ClientRecommendUseCase clientRecommendUseCase
     ) {
-        this.recommendService = recommendService;
+        this.clientRecommendUseCase = clientRecommendUseCase;
     }
 
     @PostMapping
     public ResponseEntity<RecommendClientResponse> requestRecommendation(@RequestBody RecommendClientRequest recommendClientRequest) {
         return ResponseEntity.accepted()
-                .body(recommendService.recommendAsync(recommendClientRequest));
+                .body(clientRecommendUseCase.recommendAsync(recommendClientRequest));
     }
 }

@@ -1,6 +1,6 @@
 package com.dateguide.recommendation.api;
 
-import com.dateguide.recommendation.application.SseStreamService;
+import com.dateguide.recommendation.application.service.SseStreamService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

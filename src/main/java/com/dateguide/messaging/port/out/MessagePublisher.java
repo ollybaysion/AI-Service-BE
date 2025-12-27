@@ -1,4 +1,4 @@
-package com.dateguide.messaging.port;
+package com.dateguide.messaging.port.out;
 
 import com.dateguide.messaging.message.GMessage;
 

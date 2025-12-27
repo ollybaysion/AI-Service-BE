@@ -1,9 +1,9 @@
-package com.dateguide.recommendation.application;
+package com.dateguide.recommendation.port.in;
 
 import com.dateguide.recommendation.dto.client.RecommendClientRequest;
 import com.dateguide.recommendation.dto.client.RecommendClientResponse;
 
-public interface RecommendService {
+public interface ClientRecommendUseCase {
     /**
      * RecommendClientResponse 를 반환한다.
      */
