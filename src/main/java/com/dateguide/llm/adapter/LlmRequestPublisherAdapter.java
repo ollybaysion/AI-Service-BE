@@ -1,9 +1,9 @@
 package com.dateguide.llm.adapter;
 
 import com.dateguide.llm.dto.LlmRequest;
-import com.dateguide.llm.port.LlmRequestPublisher;
+import com.dateguide.llm.port.out.LlmRequestPublisher;
 import com.dateguide.messaging.message.GMessage;
-import com.dateguide.messaging.port.MessagePublisher;
+import com.dateguide.messaging.port.out.MessagePublisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
