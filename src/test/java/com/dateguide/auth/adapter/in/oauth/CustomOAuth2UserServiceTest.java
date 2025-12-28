@@ -25,7 +25,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @DataJpaTest
-class CustomOAuth2userServiceTest {
+class CustomOAuth2UserServiceTest {
 
     @Autowired
     UserRepository userRepository;
