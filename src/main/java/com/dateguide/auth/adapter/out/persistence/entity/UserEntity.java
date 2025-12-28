@@ -4,6 +4,7 @@ import com.dateguide.auth.domain.model.OAuthProvider;
 import com.dateguide.auth.domain.model.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -34,9 +35,11 @@ public class UserEntity {
     @Column(name = "provider_user_id", nullable = false, length = 128)
     private String providerUserId;
 
+    @Setter
     @Column(length = 255)
     private String email;
 
+    @Setter
     @Column(length = 100)
     private String name;
 
