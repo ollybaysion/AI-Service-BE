@@ -1,7 +1,7 @@
 package com.dateguide.auth.adapter.in.security;
 
+import com.dateguide.auth.adapter.in.oauth.CustomOAuth2UserService;
 import com.dateguide.auth.infra.jwt.JwtProvider;
-import io.jsonwebtoken.Jwt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -18,8 +18,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtProvider jwtProvider
-    ) throws Exception {
+            JwtProvider jwtProvider,
+            CustomOAuth2UserService customOAuth2userService) throws Exception {
         JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtProvider);
 
         http
@@ -51,7 +51,12 @@ public class SecurityConfig {
                         )
                 )
 
-                // 4) JWT 필터 등록
+                // 4) OAuth
+                .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(u -> u.userService(customOAuth2userService))
+                )
+
+                // 5) JWT 필터 등록
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
