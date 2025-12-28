@@ -1,6 +1,8 @@
 package com.dateguide.auth.adapter.in.security;
 
 import com.dateguide.auth.adapter.in.oauth.CustomOAuth2UserService;
+import com.dateguide.auth.adapter.in.oauth.OAuth2SuccessHandler;
+import com.dateguide.auth.infra.AuthCookieProperties;
 import com.dateguide.auth.infra.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +21,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             JwtProvider jwtProvider,
-            CustomOAuth2UserService customOAuth2userService) throws Exception {
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtProvider);
+            AuthCookieProperties cookieProps,
+            CustomOAuth2UserService customOAuth2userService,
+            OAuth2SuccessHandler oAuth2SuccessHandler) throws Exception {
+        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtProvider, cookieProps.accessCookieName());
 
         http
                 // 1) 기본 보안 설정
@@ -54,6 +58,7 @@ public class SecurityConfig {
                 // 4) OAuth
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(u -> u.userService(customOAuth2userService))
+                        .successHandler(oAuth2SuccessHandler)
                 )
 
                 // 5) JWT 필터 등록

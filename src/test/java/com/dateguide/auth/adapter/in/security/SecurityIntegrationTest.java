@@ -2,6 +2,7 @@ package com.dateguide.auth.adapter.in.security;
 
 import com.dateguide.auth.domain.model.UserRole;
 import com.dateguide.auth.infra.jwt.JwtProvider;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,16 @@ class SecurityIntegrationTest {
 
         mockMvc.perform(get("/api/v1/secure/ping")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(content().string("pong userId=123"));
+    }
+
+    @Test
+    void protected_endpoint_with_valid_token_with_cookie_should_200() throws Exception {
+        String token = jwtProvider.createAccessToken(123L, UserRole.USER);
+
+        mockMvc.perform(get("/api/v1/secure/ping")
+                        .cookie(new Cookie("access_token", token)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("pong userId=123"));
     }
