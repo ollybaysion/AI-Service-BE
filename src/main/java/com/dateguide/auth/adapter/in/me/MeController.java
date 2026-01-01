@@ -4,12 +4,13 @@ import com.dateguide.auth.adapter.out.persistence.UserRepository;
 import com.dateguide.auth.adapter.out.persistence.entity.UserEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-@Controller
+@RestController
+@RequestMapping("/api/me")
 public class MeController {
 
     private final UserRepository userRepository;
@@ -18,12 +19,19 @@ public class MeController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/api/me")
+    @GetMapping
     public MeResponse me(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
 
-        if (userId == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "userId is null");
+        Object principal = authentication.getPrincipal();
+        Long userId;
+
+        if (principal instanceof String s) {
+            userId = Long.parseLong(s);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         UserEntity user = userRepository.findById(userId)

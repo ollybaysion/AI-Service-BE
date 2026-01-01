@@ -4,6 +4,7 @@ import com.dateguide.auth.adapter.out.persistence.RefreshTokenRepository;
 import com.dateguide.auth.adapter.out.persistence.UserRepository;
 import com.dateguide.auth.adapter.out.persistence.entity.RefreshTokenEntity;
 import com.dateguide.auth.adapter.out.persistence.entity.UserEntity;
+import com.dateguide.auth.domain.model.OAuthProvider;
 import com.dateguide.auth.domain.model.UserRole;
 import com.dateguide.auth.infra.AuthCookieProperties;
 import com.dateguide.auth.infra.jwt.JwtProvider;
@@ -13,6 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -39,20 +42,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        OAuth2User principal = (OAuth2User) authentication.getPrincipal();
+        OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
+        OidcUser principal = (OidcUser) authentication.getPrincipal();
 
-        Long userId = principal.getAttribute("userId");
-        if (userId == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+        OAuthProvider provider = OAuthProvider.from(token.getAuthorizedClientRegistrationId().toLowerCase());
+        String providerId = principal.getSubject();
 
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException("User not found" + userId));
+        UserEntity user = userRepository.findByProviderAndProviderUserId(provider, providerId)
+                .orElseThrow(() -> new IllegalStateException("User not found" + provider + providerId));
 
         UserRole role = user.getRole();
 
-        String accessToken = jwtProvider.createAccessToken(userId, role);
+        String accessToken = jwtProvider.createAccessToken(user.getId(), role);
 
         String refreshToken = UUID.randomUUID().toString();
         Instant refreshExpiresAt = Instant.now().plusSeconds(cookieProps.refreshMaxAgeSeconds());
