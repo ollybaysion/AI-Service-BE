@@ -34,12 +34,13 @@ public class SecurityConfig {
 
                 // 2) Authorization 규칙
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/me").authenticated()
                         .requestMatchers(
                                 "/",
                                 "/health",
                                 "/error",
                                 "/api/v1/auth/**",
-                                "/oauth2**",
+                                "/oauth2/**",
                                 "/login/**"
                         ).permitAll()
                         .anyRequest().authenticated()
