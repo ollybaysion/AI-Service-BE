@@ -4,23 +4,20 @@ import com.dateguide.auth.adapter.out.persistence.UserRepository;
 import com.dateguide.auth.adapter.out.persistence.entity.UserEntity;
 import com.dateguide.auth.domain.model.OAuthProvider;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOidcUserService extends OidcUserService {
 
    private final UserRepository userRepository;
 
-    public CustomOAuth2UserService(UserRepository userRepository) {
+    public CustomOidcUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -30,24 +27,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
      */
     @Override
     @Transactional
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+    public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+        OidcUser oidcUser = super.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.from(registrationId, oAuth2User.getAttributes());
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.from(registrationId, oidcUser.getAttributes());
 
         UserEntity user = upsertUser(userInfo);
 
-        Map<String, Object> principalAttributes = new HashMap<>(oAuth2User.getAttributes());
-        principalAttributes.put("userId", user.getId());
-        principalAttributes.put("role", user.getRole().name());
-        principalAttributes.put("provider", user.getProvider().name());
-
-        Collection<? extends GrantedAuthority> authorities = List.of(
-                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
-        );
-
-        return new DefaultOAuth2User(authorities, principalAttributes, "userId");
+        return oidcUser;
 
     }
 

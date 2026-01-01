@@ -1,6 +1,6 @@
 package com.dateguide.auth.adapter.in.security;
 
-import com.dateguide.auth.adapter.in.oauth.CustomOAuth2UserService;
+import com.dateguide.auth.adapter.in.oauth.CustomOidcUserService;
 import com.dateguide.auth.adapter.in.oauth.OAuth2SuccessHandler;
 import com.dateguide.auth.infra.AuthCookieProperties;
 import com.dateguide.auth.infra.jwt.JwtProvider;
@@ -22,7 +22,7 @@ public class SecurityConfig {
             HttpSecurity http,
             JwtProvider jwtProvider,
             AuthCookieProperties cookieProps,
-            CustomOAuth2UserService customOAuth2userService,
+            CustomOidcUserService customOidcUserService,
             OAuth2SuccessHandler oAuth2SuccessHandler) throws Exception {
         JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtProvider, cookieProps.accessCookieName());
 
@@ -34,12 +34,13 @@ public class SecurityConfig {
 
                 // 2) Authorization 규칙
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/me").authenticated()
                         .requestMatchers(
                                 "/",
                                 "/health",
                                 "/error",
                                 "/api/v1/auth/**",
-                                "/oauth2**",
+                                "/oauth2/**",
                                 "/login/**"
                         ).permitAll()
                         .anyRequest().authenticated()
@@ -57,7 +58,7 @@ public class SecurityConfig {
 
                 // 4) OAuth
                 .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(u -> u.userService(customOAuth2userService))
+                        .userInfoEndpoint(u -> u.oidcUserService(customOidcUserService))
                         .successHandler(oAuth2SuccessHandler)
                 )
 
