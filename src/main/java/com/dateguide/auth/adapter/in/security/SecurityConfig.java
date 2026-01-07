@@ -41,7 +41,8 @@ public class SecurityConfig {
                                 "/error",
                                 "/api/v1/auth/**",
                                 "/oauth2/**",
-                                "/login/**"
+                                "/login/**",
+                                "/internal/score"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
