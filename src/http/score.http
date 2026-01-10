@@ -1,0 +1,27 @@
+POST http://localhost:8080/internal/score
+Content-Type: application/json
+
+{
+  "userContext": {
+    "userId": "u1",
+    "area": "강남",
+    "date": "2026-01-11",
+    "startTime": "18:00",
+    "budgetRange": "MID",
+    "transportation": "WALK",
+    "mood": ["quiet"]
+  },
+  "timeContext": {
+    "now": "2026-01-11T09:50:00"
+  },
+  "places": [
+    { "placeId":  101 },
+    { "placeId":  102 },
+    { "placeId":  103 }
+  ],
+  "options": {
+    "window": "H24",
+    "returnBreakdown": true,
+    "topK": 3
+  }
+}
