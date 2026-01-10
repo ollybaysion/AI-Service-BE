@@ -11,7 +11,6 @@ import java.time.LocalTime;
 import java.util.Set;
 
 @Component
-@Primary
 public class ScoreCalculatorDummy implements ScoreCalculator {
 
     @Override
